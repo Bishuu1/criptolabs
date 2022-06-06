@@ -9,7 +9,6 @@ import time
 import requests
 import re
 from selenium import webdriver
-from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
 
@@ -19,39 +18,45 @@ def newmail():
     data = requests.get(URL)
     data = data.json()
     mail = data[0]
-    file1 = open('mail_generado.txt', 'a')
+    file1 = open('mail_generado.txt', 'w')
     file1.write(mail)
-    file1.write("\n")
+    # file1.write("\n")
     file1.close()
     return mail
 
 
 def login():
-    browser = webdriver.Chrome('/Users/bishuu1/Documents/Github/Cripto/lab2/chromedriver')
+    op = Options()
+    op.add_extension('/Users/bishuu1/Documents/Github/Cripto/lab2/AdBlock-—-best-ad-blocker.crx')
+    browser = webdriver.Chrome(executable_path='/Users/bishuu1/Documents/Github/Cripto/lab2/chromedriver', options=op)
     filea = open('mail_generado.txt', 'r')
     email = filea.readline()
     browser.get(('https://www.cinemark.cl/#signin'))
     time.sleep(2)
+    browser.switch_to.window(browser.window_handles[0])
     password = browser.find_elements(By.XPATH, '//*[@id="password"]')
     password[0].send_keys('contrasena')
     username = browser.find_elements(By.XPATH, '//*[@id="username"]')
     username[0].send_keys(email)
+    ingresarButton = browser.find_elements(By.XPATH, '//*[@id="modyo-session-oauth2"]/form/input[2]')
+    ingresarButton[0].click()
     objeto = []
     objeto.append(browser)
     objeto.append(email)
     objeto.append('contrasena')
     time.sleep(10)
     return objeto
-    #ingresarButton = browser.find_elements(By.XPATH, '//*[@id="modyo-session-oauth2"]/form/input[2]')
-    # ingresarButton[0].click()
+
     # time.sleep(10)
 
 
 def signup():
-
+    op = Options()
+    op.add_extension('/Users/bishuu1/Documents/Github/Cripto/lab2/AdBlock-—-best-ad-blocker.crx')
+    browser = webdriver.Chrome(executable_path='/Users/bishuu1/Documents/Github/Cripto/lab2/chromedriver', options=op)
     # get ruts
-    browser = webdriver.Chrome('/Users/bishuu1/Documents/Github/Cripto/lab2/chromedriver')
     browser.get(('https://sandbox.goodweb.cl/generador-de-ruts/?'))
+    browser.switch_to.window(browser.window_handles[0])
     findRut = browser.find_element_by_id('enviar')
     findRut.click()
     time.sleep(3)
@@ -62,14 +67,14 @@ def signup():
     mail = newmail()
 
     # make new tab
-    browser.execute_script("window.open('');")
     browser.switch_to.window(browser.window_handles[1])
 
     # register new user
     browser.get(('https://www.cinemark.cl/registro'))
-    time.sleep(2)
     cookies = browser.find_elements(By.XPATH, '//*[@id="modal-cookies-template"]/div[1]/div/button')
-    cookies[0].click()
+    if(cookies):
+        cookies[0].click()
+    time.sleep(2)
     name = browser.find_element_by_id('firstname')
     name.send_keys('Juanin')
     lastname = browser.find_element_by_id('lastname')
@@ -98,7 +103,7 @@ def signup():
     password.send_keys('contrasena')
     password2 = browser.find_element_by_id('pass2')
     password2.send_keys('contrasena')
-    time.sleep(100)
+    time.sleep(5)
     inscribir = browser.find_element(by=By.XPATH, value='//*[@id="form-elitegold"]/div/div/div[10]/button')
     inscribir.click()
 
@@ -109,20 +114,23 @@ def reset():
     file1 = open('mail_generado.txt', 'r')
     email = file1.readline()
     local, at, domain = email.rpartition('@')
-    browser = webdriver.Chrome('/Users/bishuu1/Documents/Github/Cripto/lab2/chromedriver')
+    op = Options()
+    op.add_extension('/Users/bishuu1/Documents/Github/Cripto/lab2/AdBlock-—-best-ad-blocker.crx')
+    browser = webdriver.Chrome(executable_path='/Users/bishuu1/Documents/Github/Cripto/lab2/chromedriver', options=op)
     txt = "https://www.1secmail.com/?login=demo&domain=dominio"
     x = re.sub("demo", local, txt)
     x = re.sub("dominio", domain, x)
     browser.get((x))
+    browser.switch_to.window(browser.window_handles[0])
     time.sleep(2)
 
     # make new tab
-    browser.execute_script("window.open('');")
     browser.switch_to.window(browser.window_handles[1])
     browser.get(('https://www.cinemark.cl/reset-password'))
     time.sleep(2)
     cookies = browser.find_elements(By.XPATH, '//*[@id="modal-cookies-template"]/div[1]/div/button')
     cookies[0].click()
+
     email1 = browser.find_elements(
         By.XPATH, '//*[@id="password-container"]/div/div[2]/div[1]/div[2]/div[1]/div[2]/p/input')
     email1[0].send_keys(email)
@@ -133,7 +141,7 @@ def reset():
     browser.switch_to.window(browser.window_handles[0])
     correoRecived = browser.find_elements(By.XPATH, '//*[@id="content"]/div/table/tbody/tr[2]')
     correoRecived[0].click()
-    time.sleep(2)
+    time.sleep(10)
     correoReset = browser.find_elements(By.XPATH, '//*[@id="messageBody"]/div/a')
     correoReset[0].click()
     print('ahora!')
@@ -145,7 +153,7 @@ def reset():
         By.XPATH, '//*[@id="password-container"]/div/div[2]/div[1]/div[2]/div[2]/div[3]/p/input')
     passwordb = browser.find_elements(
         By.XPATH, '//*[@id="password-container"]/div/div[2]/div[1]/div[2]/div[2]/div[4]/p[1]/input')
-    time.sleep(2)
+    time.sleep(3)
     passworda[0].send_keys('contrasena')
     passwordb[0].send_keys('contrasena')
     time.sleep(10)
@@ -175,15 +183,18 @@ def modify():
     botoningresar = browser.find_elements(
         By.XPATH, '//*[@id="password-container"]/div/div[2]/div[1]/div[2]/div[1]/div[3]/button')
     botoningresar[0].click()
+    time.sleep(3)
     # Abrir correo en otra tab
-    browser.execute_script("window.open('');")
     browser.switch_to.window(browser.window_handles[1])
     local, at, domain = email.rpartition('@')
     txt = "https://www.1secmail.com/?login=demo&domain=dominio"
     x = re.sub("demo", local, txt)
     x = re.sub("dominio", domain, x)
     browser.get((x))
-    time.sleep(2)
+    time.sleep(5)
+    refresh = browser.find_elements(By.XPATH, '//*[@id="refreshMailBtn"]')
+    refresh[0].click()
+    time.sleep(3)
     correoRecived = browser.find_elements(By.XPATH, '//*[@id="content"]/div/table/tbody/tr[2]')
     correoRecived[0].click()
     correoReset = browser.find_elements(By.XPATH, '//*[@id="messageBody"]/div/a')
@@ -195,12 +206,12 @@ def modify():
     time.sleep(2)
     passworda[0].send_keys('contrasena')
     passwordb[0].send_keys('contrasena')
-    time.sleep(10)
+    time.sleep(3)
     botoningresar = browser.find_elements(
         By.XPATH, '//*[@id="password-container"]/div/div[2]/div[1]/div[2]/div[2]/div[5]/button')
     botoningresar[0].click()
-    time.sleep(10)
-    time.sleep(15)
+    time.sleep(5)
 
-
+signup()
+modify()
 reset()

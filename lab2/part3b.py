@@ -9,8 +9,8 @@ import time
 import requests
 import re
 from selenium import webdriver
-from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+
 
 
 def newmail():
@@ -43,10 +43,9 @@ def signup():
     password[0].send_keys('contrasena')
     password2 = browser.find_elements(By.XPATH, '//*[@id="confirmation"]')
     password2[0].send_keys('contrasena')
-    time.sleep(15)
     checkbox = browser.find_elements(By.XPATH, '//*[@id="is_subscribed"]')
     checkbox[0].click()
-    time.sleep(4)
+    time.sleep(15)
     button = browser.find_elements(By.XPATH, '//*[@id="form-validate"]/div[4]/button/span/span')
     button[0].click()
     time.sleep(5)
@@ -59,14 +58,15 @@ def login():
     browser.get(('https://www.normacomics.com/customer/account/login/'))
     time.sleep(5)
     password = browser.find_elements(By.XPATH, '//*[@id="pass"]')
-    password[0].send_keys('contrasena')
+    password[0].send_keys('contrasena1')
     username = browser.find_elements(By.XPATH, '//*[@id="email"]')
-    username[0].send_keys(email)
+    username[0].send_keys(email + Keys.ENTER)
     time.sleep(5)
     objeto = []
     objeto.append(browser)
     objeto.append(email)
-    objeto.append('contrasena')
+    objeto.append('contrasena1')
+    time.sleep(10)
     return objeto
 
 
@@ -74,7 +74,9 @@ def reset():
     file1 = open('mail_generado_eu.txt', 'r')
     email = file1.readline()
     local, at, domain = email.rpartition('@')
-    browser = webdriver.Chrome('/Users/bishuu1/Documents/Github/Cripto/lab2/chromedriver')
+    op = Options()
+    op.add_extension('/Users/bishuu1/Documents/Github/Cripto/lab2/AdBlock-—-best-ad-blocker.crx')
+    browser = webdriver.Chrome(executable_path='/Users/bishuu1/Documents/Github/Cripto/lab2/chromedriver', options=op)
     txt = "https://www.1secmail.com/?login=demo&domain=dominio"
     x = re.sub("demo", local, txt)
     x = re.sub("dominio", domain, x)
@@ -82,27 +84,28 @@ def reset():
     time.sleep(2)
 
     # make new tab
-    browser.execute_script("window.open('');")
     browser.switch_to.window(browser.window_handles[1])
     browser.get(('https://www.normacomics.com/customer/account/forgotpassword/'))
     time.sleep(2)
     email1 = browser.find_elements(By.XPATH, '//*[@id="email_address"]')
     email1[0].send_keys(email+Keys.ENTER)
-    time.sleep(15)
-    browser.switch_to.window(browser.window_handles[0])
     time.sleep(5)
+    browser.switch_to.window(browser.window_handles[0])
+    refresh = browser.find_elements(By.XPATH, '//*[@id="refreshMailBtn"]')
+    refresh[0].click()
+    time.sleep(4)
     correoRecived = browser.find_elements(By.XPATH, '//*[@id="content"]/div/table/tbody/tr[2]')
     correoRecived[0].click()
+    time.sleep(5)
     correoReset = browser.find_elements(
         By.XPATH, '//*[@id="messageBody"]/div/div/table/tbody/tr/td/table/tbody/tr[2]/td/p[2]/a')
     correoReset[0].click()
     correo = browser.find_elements(By.XPATH, '//*[@id="password"]')
     correo[0].send_keys('contrasena')
     correo2 = browser.find_elements(By.XPATH, '//*[@id="confirmation"]')
-
-    time.sleep(10)
+    time.sleep(5)
     correo2[0].send_keys('contrasena' + Keys.ENTER)
-    time.sleep(10)
+    time.sleep(5)
 
 
 def modify():
@@ -119,11 +122,12 @@ def modify():
     new_password[0].send_keys('contrasena1')
     new_password2 = browser.find_elements(By.XPATH, '//*[@id="confirmation"]')
     new_password2[0].send_keys('contrasena1')
-    time.sleep(30)
+    time.sleep(5)
     browser.find_elements(By.XPATH, '//*[@id="agreement-news"]')[0].click()
-    time.sleep(15)
+    time.sleep(10)
     ingresarButton = browser.find_elements(By.XPATH, '//*[@id="form-validate"]/div[3]/button/span/span')
     ingresarButton[0].click()
+    time.sleep(5)
 
 
-modify()
+login()
