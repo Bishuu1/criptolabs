@@ -12,16 +12,14 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
 
-
 def newmail():
     # get mail
     URL = 'https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=1'
     data = requests.get(URL)
     data = data.json()
     mail = data[0]
-    file1 = open('mail_generado_eu.txt', 'a')
+    file1 = open('mail_generado_eu.txt', 'w')
     file1.write(mail)
-    file1.write("\n")
     file1.close()
     return mail
 
@@ -58,14 +56,14 @@ def login():
     browser.get(('https://www.normacomics.com/customer/account/login/'))
     time.sleep(5)
     password = browser.find_elements(By.XPATH, '//*[@id="pass"]')
-    password[0].send_keys('contrasena1')
+    password[0].send_keys('contrasena')
     username = browser.find_elements(By.XPATH, '//*[@id="email"]')
     username[0].send_keys(email + Keys.ENTER)
     time.sleep(5)
     objeto = []
     objeto.append(browser)
     objeto.append(email)
-    objeto.append('contrasena1')
+    objeto.append('contrasena')
     time.sleep(10)
     return objeto
 
@@ -89,7 +87,7 @@ def reset():
     time.sleep(2)
     email1 = browser.find_elements(By.XPATH, '//*[@id="email_address"]')
     email1[0].send_keys(email+Keys.ENTER)
-    time.sleep(5)
+    time.sleep(10)
     browser.switch_to.window(browser.window_handles[0])
     refresh = browser.find_elements(By.XPATH, '//*[@id="refreshMailBtn"]')
     refresh[0].click()
@@ -130,4 +128,5 @@ def modify():
     time.sleep(5)
 
 
-login()
+modify()
+reset()

@@ -31,6 +31,7 @@ def login():
     browser = webdriver.Chrome(executable_path='/Users/bishuu1/Documents/Github/Cripto/lab2/chromedriver', options=op)
     filea = open('mail_generado.txt', 'r')
     email = filea.readline()
+    browser.switch_to.window(browser.window_handles[0])
     browser.get(('https://www.cinemark.cl/#signin'))
     time.sleep(2)
     browser.switch_to.window(browser.window_handles[0])
@@ -160,7 +161,7 @@ def reset():
     botoningresar = browser.find_elements(
         By.XPATH, '//*[@id="password-container"]/div/div[2]/div[1]/div[2]/div[2]/div[5]/button')
     botoningresar[0].click()
-    time.sleep(10)
+    time.sleep(5)
 
 
 def modify():
@@ -191,7 +192,7 @@ def modify():
     x = re.sub("demo", local, txt)
     x = re.sub("dominio", domain, x)
     browser.get((x))
-    time.sleep(5)
+    time.sleep(10)
     refresh = browser.find_elements(By.XPATH, '//*[@id="refreshMailBtn"]')
     refresh[0].click()
     time.sleep(3)
@@ -211,6 +212,7 @@ def modify():
         By.XPATH, '//*[@id="password-container"]/div/div[2]/div[1]/div[2]/div[2]/div[5]/button')
     botoningresar[0].click()
     time.sleep(5)
+
 
 signup()
 modify()
